@@ -26,6 +26,7 @@
     />
     <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css" />
     <link rel="stylesheet" href="assets/css/templatemo-softy-pinko.css" />
+    <link rel="icon" href="assets/images/favicon.png" type="image/x-icon" />
   </head>
 
   <body>
@@ -725,28 +726,37 @@
 
           <!-- Script para mostrar mensaje de éxito o error -->
           <script>
-            window.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("DOMContentLoaded", function () {
               const form = document.getElementById("contact");
-              form.addEventListener("submit", async function (e) {
-                e.preventDefault();
-                const data = new FormData(form);
-                const response = await fetch(form.action, {
-                  method: form.method,
-                  body: data,
-                  headers: {
-                    Accept: "application/json",
-                  },
-                });
 
-                if (response.ok) {
+              form.addEventListener("submit", async function (event) {
+                event.preventDefault();
+
+                const data = new FormData(form);
+                try {
+                  const response = await fetch(form.action, {
+                    method: "POST",
+                    body: data,
+                    headers: {
+                      Accept: "application/json",
+                    },
+                  });
+
+                  if (response.ok) {
+                    alert(
+                      "✅ Mensaje enviado con éxito. ¡Gracias por contactarnos!"
+                    );
+                    form.reset();
+                  } else {
+                    alert(
+                      "❌ Error al enviar el mensaje. Inténtalo nuevamente."
+                    );
+                  }
+                } catch (error) {
                   alert(
-                    "✅ Mensaje enviado con éxito. ¡Gracias por contactarnos!"
+                    "❌ Hubo un problema de conexión. Inténtalo más tarde."
                   );
-                  form.reset();
-                } else {
-                  alert(
-                    "❌ Hubo un error al enviar el mensaje. Por favor, inténtalo de nuevo."
-                  );
+                  console.error(error);
                 }
               });
             });
